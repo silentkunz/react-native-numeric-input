@@ -38,5 +38,5 @@ declare module 'react-native-numeric-input' {
     INumericInputProps
   > {}
 
-  export const DIMENTIONS: { height: number; width: number }
+  export const DIMENSIONS: { height: number; width: number }
 }

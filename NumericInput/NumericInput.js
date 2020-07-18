@@ -8,6 +8,7 @@ import { create, PREDEF_RES } from 'react-native-pixel-perfect'
 let calcSize = create(PREDEF_RES.iphone7.px)
 
 export default class NumericInput extends Component {
+
     constructor(props) {
         super(props)
         const noInitSent = props.initValue !== 0 && !props.initValue
@@ -19,23 +20,30 @@ export default class NumericInput extends Component {
         this.ref = null
     }
 
-    // this.props refers to the new props
-    componentDidUpdate() {
-        const initSent = !(this.props.initValue !== 0 && !this.props.initValue); 
-
-        // compare the new value (props.initValue) with the existing/old one (this.state.value)
-        if (this.props.initValue !== this.state.value && initSent) {
+    componentDidUpdate(prevProps) {
+        if (prevProps.value !== this.props.value) {
             this.setState({
-                value: this.props.initValue,
-                lastValid: this.props.initValue,
-                stringValue: this.props.initValue.toString()
-            });
+               value: this.props.value,
+               lastValid: this.props.value,
+               stringValue: this.props.value.toString()
+            })
         }
     }
-    
+
     updateBaseResolution = (width, height) => {
         calcSize = create({ width, height })
     }
+
+    startInc = () => {
+        this.inc()
+        this.incInterval = setInterval(this.inc, 100)
+    }
+
+    startDec = () => {
+        this.dec()
+        this.decInterval = setInterval(this.dec, 100)
+    }
+
     inc = () => {
         let value = this.props.value && (typeof this.props.value === 'number') ? this.props.value : this.state.value
         if (this.props.maxValue === null || (value + this.props.step < this.props.maxValue)) {
@@ -46,11 +54,11 @@ export default class NumericInput extends Component {
             this.props.onLimitReached(true, 'Reached Maximum Value!')
             value = this.props.maxValue
             this.setState({ value, stringValue: value.toString() })
-
         }
         if (value !== this.props.value)
             this.props.onChange && this.props.onChange(Number(value))
     }
+
     dec = () => {
         let value = this.props.value && (typeof this.props.value === 'number') ? this.props.value : this.state.value
         if (this.props.minValue === null || (value - this.props.step > this.props.minValue)) {
@@ -64,6 +72,15 @@ export default class NumericInput extends Component {
             this.props.onChange && this.props.onChange(Number(value))
         this.setState({ value, stringValue: value.toString() })
     }
+
+    stopInc = () => {
+        clearInterval(this.incInterval)
+    }
+
+    stopDec = () => {
+        clearInterval(this.decInterval)
+    }
+
     isLegalValue = (value, mReal, mInt) => value === '' || (((this.props.valueType === 'real' && mReal(value)) || (this.props.valueType !== 'real' && mInt(value))) && (this.props.maxValue === null || (parseFloat(value) <= this.props.maxValue)) && (this.props.minValue === null || (parseFloat(value) >= this.props.minValue)))
 
     realMatch = (value) => value && value.match(/-?\d+(\.(\d+)?)?/) && value.match(/-?\d+(\.(\d+)?)?/)[0] === value.match(/-?\d+(\.(\d+)?)?/).input
@@ -85,9 +102,8 @@ export default class NumericInput extends Component {
             return
         }
         let legal = this.isLegalValue(value, this.realMatch, this.intMatch)
-        if (legal) {
+        if (legal)
             this.setState({ lastValid: value })
-        }
         if (!legal && !this.props.validateOnBlur) {
             if (this.ref) {
                 this.ref.blur()
@@ -103,7 +119,6 @@ export default class NumericInput extends Component {
                 }, 15)
                 setTimeout(() => this.ref.focus(), 20)
             }
-
         } else if (!legal && this.props.validateOnBlur) {
             this.setState({ stringValue: value })
             let parsedValue = this.props.valueType === 'real' ? parseFloat(value) : parseInt(value)
@@ -118,20 +133,17 @@ export default class NumericInput extends Component {
             if (parsedValue !== this.props.value)
                 this.props.onChange && this.props.onChange(parsedValue)
             this.setState({ value: parsedValue, legal, stringValue: parsedValue.toString() })
-
         }
     }
-    onBlur = () => {
 
+    onBlur = () => {
         let match = this.state.stringValue.match(/-?[0-9]\d*(\.\d+)?/)
         let legal = match && match[0] === match.input && ((this.props.maxValue === null || (parseFloat(this.state.stringValue) <= this.props.maxValue)) && (this.props.minValue === null || (parseFloat(this.state.stringValue) >= this.props.minValue)))
         if (!legal) {
-            if (this.props.minValue !== null && (parseFloat(this.state.stringValue) <= this.props.minValue)) {
+            if (this.props.minValue !== null && (parseFloat(this.state.stringValue) <= this.props.minValue))
                 this.props.onLimitReached(true, 'Reached Minimum Value!')
-            }
-            if (this.props.maxValue !== null && (parseFloat(this.state.stringValue) >= this.props.maxValue)) {
+            if (this.props.maxValue !== null && (parseFloat(this.state.stringValue) >= this.props.maxValue))
                 this.props.onLimitReached(false, 'Reached Maximum Value!')
-            }
             if (this.ref) {
                 this.ref.blur()
                 setTimeout(() => {
@@ -157,7 +169,7 @@ export default class NumericInput extends Component {
 
     render() {
         const editable = this.props.editable
-        const sepratorWidth = (typeof this.props.separatorWidth === 'undefined') ? this.props.sepratorWidth : this.props.separatorWidth;//supporting old property name sepratorWidth
+        const separatorWidth = this.props.separatorWidth
         const borderColor = this.props.borderColor
         const iconStyle = [style.icon, this.props.iconStyle]
         const totalWidth = this.props.totalWidth
@@ -173,7 +185,7 @@ export default class NumericInput extends Component {
             [style.inputContainerPlusMinus, { width: totalWidth, height: totalHeight, borderColor: borderColor }, this.props.rounded ? { borderRadius: borderRadiusTotal } : {}, this.props.containerStyle]
         const inputStyle = this.props.type === 'up-down' ?
             [style.inputUpDown, { width: inputWidth, height: totalHeight, fontSize: fontSize, color: textColor, borderRightWidth: 2, borderRightColor: borderColor }, this.props.inputStyle] :
-            [style.inputPlusMinus, { width: inputWidth, height: totalHeight, fontSize: fontSize, color: textColor, borderRightWidth: sepratorWidth, borderLeftWidth: sepratorWidth, borderLeftColor: borderColor, borderRightColor: borderColor }, this.props.inputStyle]
+            [style.inputPlusMinus, { width: inputWidth, height: totalHeight, fontSize: fontSize, color: textColor, borderRightWidth: separatorWidth, borderLeftWidth: separatorWidth, borderLeftColor: borderColor, borderRightColor: borderColor }, this.props.inputStyle]
         const upDownStyle = [{ alignItems: 'center', width: totalWidth - inputWidth, backgroundColor: this.props.upDownButtonsBackgroundColor, borderRightWidth: 1, borderRightColor: borderColor }, this.props.rounded ? { borderTopRightRadius: borderRadiusTotal, borderBottomRightRadius: borderRadiusTotal } : {}]
         const rightButtonStyle = [
             {
@@ -211,8 +223,8 @@ export default class NumericInput extends Component {
         const inputWraperStyle = {
             alignSelf: 'center',
             borderLeftColor: borderColor,
-            borderLeftWidth: sepratorWidth,
-            borderRightWidth: sepratorWidth,
+            borderLeftWidth: separatorWidth,
+            borderRightWidth: separatorWidth,
             borderRightColor: borderColor
         }
         if (this.props.type === 'up-down')
@@ -220,41 +232,38 @@ export default class NumericInput extends Component {
                 <View style={inputContainerStyle}>
                     <TextInput {...this.props.extraTextInputProps} editable={editable} returnKeyType='done' underlineColorAndroid='rgba(0,0,0,0)' keyboardType='numeric' value={this.state.stringValue} onChangeText={this.onChange} style={inputStyle} ref={ref => this.ref = ref} onBlur={this.onBlur} onFocus={this.onFocus} />
                     <View style={upDownStyle}>
-                        <Button onPress={this.inc} style={{ flex: 1, width: '100%', alignItems: 'center' }}>
+                        <Button  onPressIn={this.startInc} onPressOut={this.stopInc} style={{ flex: 1, width: '100%', alignItems: 'center' }}>
                             <Icon name='ios-arrow-up' size={fontSize} style={[...iconStyle, maxReached ? this.props.reachMaxIncIconStyle : {}, minReached ? this.props.reachMinIncIconStyle : {}]} />
                         </Button>
-                        <Button onPress={this.dec} style={{ flex: 1, width: '100%', alignItems: 'center' }}>
+                        <Button onPressIn={this.startDec} onPressOut={this.stopDec} style={{ flex: 1, width: '100%', alignItems: 'center' }}>
                             <Icon name='ios-arrow-down' size={fontSize} style={[...iconStyle, maxReached ? this.props.reachMaxDecIconStyle : {}, minReached ? this.props.reachMinDecIconStyle : {}]} />
                         </Button>
                     </View>
                 </View>)
         else return (
             <View style={inputContainerStyle}>
-                <Button onPress={this.dec} style={leftButtonStyle}>
+                <Button onPressIn={this.startDec} onPressOut={this.stopDec} style={leftButtonStyle}>
                     <Icon name='md-remove' size={fontSize} style={[...iconStyle, maxReached ? this.props.reachMaxDecIconStyle : {}, minReached ? this.props.reachMinDecIconStyle : {}]} />
                 </Button>
                 <View style={[inputWraperStyle]}>
                     <TextInput {...this.props.extraTextInputProps} editable={editable} returnKeyType='done' underlineColorAndroid='rgba(0,0,0,0)' keyboardType='numeric' value={this.state.stringValue} onChangeText={this.onChange} style={inputStyle} ref={ref => this.ref = ref} onBlur={this.onBlur} onFocus={this.onFocus} />
                 </View>
-                <Button onPress={this.inc} style={rightButtonStyle}>
+                <Button onPressIn={this.startInc} onPressOut={this.stopInc} style={rightButtonStyle}>
                     <Icon name='md-add' size={fontSize} style={[...iconStyle, maxReached ? this.props.reachMaxIncIconStyle : {}, minReached ? this.props.reachMinIncIconStyle : {}]} />
                 </Button>
             </View>)
-
-
     }
 }
 
 const style = StyleSheet.create({
-    seprator: {
+    separator: {
         backgroundColor: 'grey',
-        height: calcSize(80),
+        height: calcSize(80)
     },
     inputContainerUpDown: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-
         borderColor: 'grey',
         borderWidth: 1
     },
@@ -267,7 +276,6 @@ const style = StyleSheet.create({
     inputUpDown: {
         textAlign: 'center',
         padding: 0
-
     },
     inputPlusMinus: {
         textAlign: 'center',
@@ -288,7 +296,7 @@ NumericInput.propTypes = {
     iconStyle: PropTypes.any,
     totalWidth: PropTypes.number,
     totalHeight: PropTypes.number,
-    sepratorWidth: PropTypes.number,
+    separatorWidth: PropTypes.number,
     type: PropTypes.oneOf(['up-down', 'plus-minus']),
     valueType: PropTypes.oneOf(['real', 'integer']),
     rounded: PropTypes.any,
@@ -317,7 +325,7 @@ NumericInput.defaultProps = {
     borderColor: '#d4d4d4',
     iconStyle: {},
     totalWidth: calcSize(220),
-    sepratorWidth: 1,
+    separatorWidth: 1,
     type: 'plus-minus',
     rounded: false,
     textColor: 'black',
@@ -340,5 +348,4 @@ NumericInput.defaultProps = {
     reachMinDecIconStyle: {},
     onLimitReached: (isMax, msg) => { },
     extraTextInputProps: {}
-
 }
