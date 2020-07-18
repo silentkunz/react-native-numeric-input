@@ -1,4 +1,4 @@
-# react-native-numeric-input
+# rn-numeric-input
 a cross platform stylish numeric input for react native
 
 <h3 align="center"><b>Visual Demo</b></h3>
@@ -71,19 +71,19 @@ import NumericInput from 'react-native-numeric-input'
 ```
 ### Advanced Usage
 ```javascript
-        <NumericInput 
-            value={this.state.value} 
-            onChange={value => this.setState({value})} 
+        <NumericInput
+            value={this.state.value}
+            onChange={value => this.setState({value})}
             onLimitReached={(isMax,msg) => console.log(isMax,msg)}
-            totalWidth={240} 
-            totalHeight={50} 
+            totalWidth={240}
+            totalHeight={50}
             iconSize={25}
             step={1.5}
             valueType='real'
-            rounded 
-            textColor='#B0228C' 
-            iconStyle={{ color: 'white' }} 
-            rightButtonBackgroundColor='#EA3788' 
+            rounded
+            textColor='#B0228C'
+            iconStyle={{ color: 'white' }}
+            rightButtonBackgroundColor='#EA3788'
             leftButtonBackgroundColor='#E56B70'/>
 ```
 
@@ -127,17 +127,13 @@ Name                                | Type                                | Defa
 * **style props** - this component has a default style and the styles props are to override the default style or add more fields
 * **totalWidth prop** - this prop is for the entire component width, and all other sizes are derived from it , unless given other size props
 * **initValue prop** - if using value prop, this is not needed and the initial value can be given by the value prop
-* **validateOnBlur** - added on version 1.3.2, if set to false the text input will validate while typing, not recommended, so just keep it true unless there is a good reason not to use the default functionallity 
+* **validateOnBlur** - added on version 1.3.2, if set to false the text input will validate while typing, not recommended, so just keep it true unless there is a good reason not to use the default functionallity
 * **reachMaxIncIconStyle** - added on version 1.4.0, used to set style to the increment button icon in case maxValue is reached - **optional**
 * **reachMaxDecIconStyle** - added on version 1.4.0, used to set style to the decrement button icon in case maxValue is reached - **optional**
 * **reachMinIncIconStyle** - added on version 1.4.0, used to set style to the increment button icon in case minValue is reached - **optional**
 * **reachMinDecIconStyle** - added on version 1.4.0, used to set style to the decrement button icon in case minValue is reached - **optional**
 * **onLimitReached** - added on version 1.7.0, used to handle event of min/max reached, **this function receives 2 arguments: (isMas:Boolean, msg:String)** like in the advanced example above - **optional**
 * **extraTextInputProps**  - added on version 1.8.0, used to add props used for the original TextInput component that are not used/supported in this component explicitly - **optional**
-
-
-## Versioning
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/himelbrand/react-native-numeric-input/tags). 
 
 ## License
 This project is licensed under the MIT License

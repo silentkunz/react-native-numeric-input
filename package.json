@@ -1,6 +1,6 @@
 {
-  "name": "react-native-numeric-input",
-  "version": "1.9",
+  "name": "rn-numeric-input",
+  "version": "1.0.0",
   "description": "a stylish numeric input for react native",
   "main": "index.js",
   "scripts": {
@@ -20,10 +20,7 @@
     "input",
     "numeric"
   ],
-  "author": {
-    "name": "ugo hr"
-    "email": "ugohbg@gmail.com"
-  },
+  "author": "Ugo Hr <ugohbg@gmail.com>",
   "homepage": "https://github.com/ugohr/react-native-numeric-input",
   "bugs": {
     "url": "https://github.com/ugohr/react-native-numeric-input/issues"
@@ -31,6 +28,9 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/ugohr/react-native-numeric-input.git"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
   },
   "license": "MIT",
   "dependencies": {
