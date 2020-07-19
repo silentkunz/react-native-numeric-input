@@ -243,13 +243,13 @@ export default class NumericInput extends Component {
         else return (
             <View style={inputContainerStyle}>
                 <Button onPressIn={this.startDec} onPressOut={this.stopDec} style={leftButtonStyle}>
-                    <Icon name='md-remove' size={fontSize} style={[...iconStyle, maxReached ? this.props.reachMaxDecIconStyle : {}, minReached ? this.props.reachMinDecIconStyle : {}]} />
+                    {this.props.customDecIcon || <Icon name='md-remove' size={fontSize} style={[...iconStyle, maxReached ? this.props.reachMaxDecIconStyle : {}, minReached ? this.props.reachMinDecIconStyle : {}]} />}
                 </Button>
                 <View style={[inputWraperStyle]}>
                     <TextInput {...this.props.extraTextInputProps} editable={editable} returnKeyType='done' underlineColorAndroid='rgba(0,0,0,0)' keyboardType='numeric' value={this.state.stringValue} onChangeText={this.onChange} style={inputStyle} ref={ref => this.ref = ref} onBlur={this.onBlur} onFocus={this.onFocus} />
                 </View>
                 <Button onPressIn={this.startInc} onPressOut={this.stopInc} style={rightButtonStyle}>
-                    <Icon name='md-add' size={fontSize} style={[...iconStyle, maxReached ? this.props.reachMaxIncIconStyle : {}, minReached ? this.props.reachMinIncIconStyle : {}]} />
+                    {this.props.customIncIcon || <Icon name='md-add' size={fontSize} style={[...iconStyle, maxReached ? this.props.reachMaxIncIconStyle : {}, minReached ? this.props.reachMinIncIconStyle : {}]} />}
                 </Button>
             </View>)
     }
@@ -313,6 +313,14 @@ NumericInput.propTypes = {
     upDownButtonsBackgroundColor: PropTypes.string,
     rightButtonBackgroundColor: PropTypes.string,
     leftButtonBackgroundColor: PropTypes.string,
+    customDecIcon: PropTypes.oneOfType([
+        PropTypes.node,
+        PropTypes.element,
+    ]),
+    customIncIcon: PropTypes.oneOfType([
+        PropTypes.node,
+        PropTypes.element,
+    ]),
     editable: PropTypes.bool,
     reachMaxIncIconStyle: PropTypes.any,
     reachMaxDecIconStyle: PropTypes.any,
@@ -340,6 +348,8 @@ NumericInput.defaultProps = {
     upDownButtonsBackgroundColor: 'white',
     rightButtonBackgroundColor: 'white',
     leftButtonBackgroundColor: 'white',
+    customDecIcon: null,
+    customIncIcon: null,
     editable: true,
     validateOnBlur: true,
     reachMaxIncIconStyle: {},
