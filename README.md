@@ -18,7 +18,7 @@ Enjoy !
 
 ## Installation
 ### Latest version
-v1.9.1
+v1.9.3
 #### if you have react-native-vector-icons installed in your project
 ```bash
 yarn add rn-numeric-input
