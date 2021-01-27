@@ -1,24 +1,18 @@
 # rn-numeric-input
 A cross platform stylish numeric input for react native
 
-This is [react-native-numeric-input](https://www.npmjs.com/package/react-native-numeric-input) package with fixed issues and a new functionality
+This is [react-native-numeric-input](https://www.npmjs.com/package/react-native-numeric-input) package with fixed issues
 
 - dynamically change value using setState ([issue](https://github.com/himelbrand/react-native-numeric-input/issues/45))
-- support for custom icons inside plus-minus buttons ([pull request](https://github.com/himelbrand/react-native-numeric-input/pull/62))
 
 <h3 align="center"><b>Visual Demo</b></h3>
 <p align="center">
 <img src="https://media.giphy.com/media/4To90hOE71mUTgdBVZ/giphy.gif"/>
 </p>
 
-## Working example
-You can check out the very simple react native example app
-Just click [here](https://github.com/himelbrand/react-native-numeric-input/tree/master/Example) and follow the instructions
-Enjoy !
-
 ## Installation
 ### Latest version
-v1.9.3
+v1.9.4
 #### if you have react-native-vector-icons installed in your project
 ```bash
 yarn add rn-numeric-input
