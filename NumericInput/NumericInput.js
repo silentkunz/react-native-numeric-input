@@ -17,7 +17,7 @@ export default class NumericInput extends Component {
             lastValid: noInitSent ? props.value ? props.value : 0 : props.initValue,
             stringValue: (noInitSent ? props.value ? props.value : 0 : props.initValue).toString(),
         }
-        this.ref = this.props.reference
+        this.ref = null
     }
 
     componentDidUpdate(prevProps) {
