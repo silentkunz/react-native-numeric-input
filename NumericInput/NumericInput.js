@@ -21,7 +21,7 @@ export default class NumericInput extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (prevProps.value !== this.props.value) {
+        if (prevProps.value !== this.props.value || this.state.value !== this.props.value) {
             this.setState({
                value: this.props.value,
                lastValid: this.props.value,
